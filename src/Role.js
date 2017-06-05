@@ -1,5 +1,5 @@
 var Role = (function(_super){
-    'use strict';
+    //'use strict';
     function Role(){
         Role.super(this);
         if(!Role.hasInitOnce){
