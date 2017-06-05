@@ -55,6 +55,7 @@ var Role = (function(_super){
             Laya.stage.on(Laya.Event.CLICK,this,function(event){
                 if(this.hp<=0){
                     Laya.stage.off(Laya.Event.CLICK,this,arguments.callee);
+                    this.visble = false;
                     return;
                 }
                 var x = Laya.stage.mouseX;
@@ -93,6 +94,7 @@ var Role = (function(_super){
                 this.y += Role.speed[this.enemyType-1];
                 if(this.y > Laya.stage.height + bounds.height/2){
                     this.removeSelf();
+                    this.visble = false;
                     Laya.timer.clear(this,arguments.callee);
                 }
             });
@@ -106,11 +108,13 @@ var Role = (function(_super){
                 this.y -= Role.bulletSpeed;
                 if(this.y < - bounds.height/2){
                     this.removeSelf();
+                    this.visble = false;
                     Laya.timer.clear(this,arguments.callee);
                 }
             });
         }
         this.hitRadius = bounds.width/2;
+        this.visble = true;
     }
     return Role;
 })(Laya.Sprite)

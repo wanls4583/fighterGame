@@ -56,7 +56,7 @@
             if(!obj || !obj.roleType || obj.hp <=0)
                 continue;
             //子弹或者hero血量为0时，不再检测碰撞
-            if(this.hp<=0){
+            if(this.hp<=0 || (this.roleType == 3 && !this.visble)){
                 Laya.timer.clear(this,arguments.callee);
                 break;
             }
