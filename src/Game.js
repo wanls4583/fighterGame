@@ -6,8 +6,7 @@
     Laya.stage.addChild(bg);
     Laya.loader.load(AniConfPath, Laya.Handler.create(this,onload), null, Laya.Loader.ATLAS);
     function onload(){
-        var hero = new Role();
-        hero.init(1);
+        var hero = new Role(1);
         Laya.stage.addChild(hero);
         Laya.timer.frameLoop(1,hero,checkHit);
         createEnemy();
@@ -23,14 +22,14 @@
             rate *= 3/2
         }
         Laya.timer.frameLoop(60,this,function(){
-            var enemy = new Role();
+            var enemy = null;
             var rnd = Math.ceil(Math.random()*100);
             if(rnd < 70){
-                enemy.init(2,1);
+                enemy = new Role(2,1);
             }else if(rnd < 98){
-                enemy.init(2,2);
+                enemy = new Role(2,2);
             }else{
-                enemy.init(2,3);
+                enemy = new Role(2,3);
             }
             Laya.stage.addChild(enemy);
         });
@@ -38,8 +37,7 @@
     //发射子弹
     function shoot(){
         Laya.timer.frameLoop(30,this,function(){
-            var bullet = new Role();
-            bullet.init(3);
+            var bullet = new Role(3);
             Laya.stage.addChild(bullet);
             Laya.timer.frameLoop(1,bullet,checkHit);
             //hero死亡时不再发射子弹

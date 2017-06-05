@@ -1,6 +1,6 @@
 var Role = (function(_super){
     //'use strict';
-    function Role(){
+    function Role(roleType,enemyType){
         Role.super(this);
         if(!Role.hasInitOnce){
             Role.hasInitOnce = true;
@@ -14,6 +14,7 @@ var Role = (function(_super){
             Laya.Animation.createFrames(['war/enemy3_down1.png','war/enemy3_down2.png','war/enemy3_down3.png','war/enemy3_down4.png'],'enemy3_down');
             Laya.Animation.createFrames(['war/bullet1.png'],'bullet1');
         }
+        this.init(roleType,enemyType);
     }
     Laya.class(Role,'Role',_super);
     //难度等级
