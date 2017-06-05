@@ -53,6 +53,10 @@ var Role = (function(_super){
             this.pos(Laya.stage.width/2,Laya.stage.height-bounds.height*2/3);
             //hero移动事件
             Laya.stage.on(Laya.Event.CLICK,this,function(event){
+                if(this.hp<=0){
+                    Laya.stage.off(Laya.Event.CLICK,this,arguments.callee);
+                    return;
+                }
                 var x = Laya.stage.mouseX;
                 var y = Laya.stage.mouseY;
                 var minX = bounds.width/2;
@@ -89,6 +93,7 @@ var Role = (function(_super){
                 this.y += Role.speed[this.enemyType-1];
                 if(this.y > Laya.stage.height + bounds.height/2){
                     this.removeSelf();
+                    Laya.timer.clear(this,arguments.callee);
                 }
             });
         }else if(roleType==3){//如果是子弹
@@ -101,6 +106,7 @@ var Role = (function(_super){
                 this.y -= Role.bulletSpeed;
                 if(this.y < - bounds.height/2){
                     this.removeSelf();
+                    Laya.timer.clear(this,arguments.callee);
                 }
             });
         }
