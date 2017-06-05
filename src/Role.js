@@ -11,8 +11,10 @@ var Role = (function(_super){
             Laya.Animation.createFrames(['war/hero_down1.png','war/hero_down2.png','war/hero_down3.png','war/hero_down4.png'],'hero_down');
             Laya.Animation.createFrames(['war/enemy1_down1.png','war/enemy1_down2.png','war/enemy1_down3.png','war/enemy1_down4.png'],'enemy1_down');
             Laya.Animation.createFrames(['war/enemy2_down1.png','war/enemy2_down2.png','war/enemy2_down3.png','war/enemy2_down4.png'],'enemy2_down');
-            Laya.Animation.createFrames(['war/enemy3_down1.png','war/enemy3_down2.png','war/enemy3_down3.png','war/enemy3_down4.png'],'enemy3_down');
+            Laya.Animation.createFrames(['war/enemy3_down1.png','war/enemy3_down2.png','war/enemy3_down3.png','war/enemy3_down4.png','war/enemy3_down5.png','war/enemy3_down6.png'],'enemy3_down');
             Laya.Animation.createFrames(['war/bullet1.png'],'bullet1');
+            Laya.Animation.createFrames(['war/enemy2_hit.png'],'enemy2_hit');
+            Laya.Animation.createFrames(['war/enemy3_hit.png'],'enemy3_hit');
         }
         this.init(roleType,enemyType);
     }
@@ -31,13 +33,32 @@ var Role = (function(_super){
             this.ani = new Laya.Animation();
             this.addChild(this.ani);
         }
-        if(action.indexOf('_down')!=-1){
-            this.ani.on(Laya.Event.COMPLETE,this,function(){
-                this.removeSelf();
-            })
-        }
         this.ani.clear();
-        this.ani.play(0,true,action);
+        if(action.indexOf('_down')!=-1){
+            this.ani.play(0,false,action);
+            this.ani.on(Laya.Event.COMPLETE,this,function(){
+                this.destroy();
+                this.ani.clear();
+            })
+        }else if(action.indexOf('_hit')!=-1){
+            this.ani.play(0,false,action);
+            this.ani.on(Laya.Event.COMPLETE,this,function(){
+                if(this.hp<=0){
+                    this.play('enemy'+this.enemyType+'_down');
+                }else{
+                    this.play('enemy'+this.enemyType+'_fly');
+                }
+            })
+        }else{
+            this.ani.play(0,false,action);
+            // this.ani.on(Laya.Event.COMPLETE,this,function(){
+            //     //消失在画面时，销毁对象
+            //     if(this.hp<=0)
+            //         this.ani.destroy();
+            //     else
+            //         this.ani.play(0,false,action);
+            // })
+        }
         var bounds = this.ani.getGraphicBounds();		
         this.ani.pos(-bounds.width / 2, -bounds.height / 2);
     }
@@ -56,7 +77,7 @@ var Role = (function(_super){
             Laya.stage.on(Laya.Event.CLICK,this,function(event){
                 if(this.hp<=0){
                     Laya.stage.off(Laya.Event.CLICK,this,arguments.callee);
-                    this.visible = false;
+                    this.roleVisible = false;
                     return;
                 }
                 var x = Laya.stage.mouseX;
@@ -94,8 +115,8 @@ var Role = (function(_super){
             Laya.timer.frameLoop(1,this,function(){
                 this.y += Role.speed[this.enemyType-1];
                 if(this.y > Laya.stage.height + bounds.height/2){
-                    this.removeSelf();
-                    this.visible = false;
+                    this.destroy();
+                    this.roleVisible = false;
                     Laya.timer.clear(this,arguments.callee);
                 }
             });
@@ -108,14 +129,14 @@ var Role = (function(_super){
             Laya.timer.frameLoop(1,this,function(){
                 this.y -= Role.bulletSpeed;
                 if(this.y < - bounds.height/2){
-                    this.removeSelf();
-                    this.visible = false;
+                    this.destroy();
+                    this.roleVisible = false;
                     Laya.timer.clear(this,arguments.callee);
                 }
             });
         }
         this.hitRadius = bounds.width/2;
-        this.visible = true;
+        this.roleVisible = true;
     }
     return Role;
 })(Laya.Sprite)

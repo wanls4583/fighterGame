@@ -51,13 +51,13 @@
         var numChildren = Laya.stage.numChildren;
         for(var i = 0; i<numChildren; i++){
             var obj = Laya.stage.getChildAt(i);
-            if(!obj || !obj.roleType || obj.hp <=0)
-                continue;
             //子弹或者hero血量为0时，不再检测碰撞
-            if(this.hp<=0 || (this.roleType == 3 && !this.visible)){
+            if(!this || (this.hp<=0 && this.roleType==3)){
                 Laya.timer.clear(this,arguments.callee);
                 break;
             }
+            if(!obj || !obj.roleType || obj.hp <=0)
+                continue;
             if(this.roleType == 1 && obj.roleType != 3 && obj.roleType != 1){//检测hero碰撞
                 var hitRadius = this.hitRadius + obj.hitRadius
                 if(hitRadius > Math.abs(this.x-obj.x) && hitRadius > Math.abs(this.y-obj.y)){
@@ -65,18 +65,25 @@
                     obj.hp--;
                     if(this.hp<=0)
                         this.play('hero_down');
-                    if(obj.hp<=0)
+                    if(obj.hp<=0 && obj.enemyType==1){
                         obj.play('enemy'+obj.enemyType+'_down');
+                    }else if(obj.enemyType>1){
+                        obj.play('enemy'+obj.enemyType+'_hit');
+                    }
+                        
                 }
             }else if(this.roleType == 3 && obj.roleType != 3 && obj.roleType != 1){//检测子弹碰撞
                 var hitRadius = this.hitRadius + obj.hitRadius
                 if(hitRadius > Math.abs(this.x-obj.x) && hitRadius > Math.abs(this.y-obj.y)){
                     this.hp--;
                     if(this.hp<=0)
-                        this.removeSelf();
+                        this.destroy();
                     obj.hp--;
-                    if(obj.hp<=0)
+                    if(obj.hp<=0 && obj.enemyType==1){
                         obj.play('enemy'+obj.enemyType+'_down');
+                    }else if(obj.enemyType>1){
+                        obj.play('enemy'+obj.enemyType+'_hit');
+                    }
                 }
             }
         }
