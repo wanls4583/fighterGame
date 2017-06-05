@@ -34,6 +34,7 @@ var Role = (function(_super){
             this.addChild(this.ani);
         }
         this.ani.clear();
+        this.ani.offAll();
         if(action.indexOf('_down')!=-1){
             this.ani.play(0,false,action);
             this.ani.on(Laya.Event.COMPLETE,this,function(){
@@ -41,7 +42,7 @@ var Role = (function(_super){
                 this.ani.clear();
             })
         }else if(action.indexOf('_hit')!=-1){
-            this.ani.play(0,false,action);
+            this.ani.play(0,false,action);	
             this.ani.on(Laya.Event.COMPLETE,this,function(){
                 if(this.hp<=0){
                     this.play('enemy'+this.enemyType+'_down');
@@ -51,13 +52,13 @@ var Role = (function(_super){
             })
         }else{
             this.ani.play(0,false,action);
-            // this.ani.on(Laya.Event.COMPLETE,this,function(){
-            //     //消失在画面时，销毁对象
-            //     if(this.hp<=0)
-            //         this.ani.destroy();
-            //     else
-            //         this.ani.play(0,false,action);
-            // })
+            this.ani.on(Laya.Event.COMPLETE,this,function(){
+                //消失在画面时，销毁对象
+                if(this.hp<=0)
+                    this.ani.destroy();
+                else
+                    this.ani.play(0,false,action);
+            })
         }
         var bounds = this.ani.getGraphicBounds();		
         this.ani.pos(-bounds.width / 2, -bounds.height / 2);
