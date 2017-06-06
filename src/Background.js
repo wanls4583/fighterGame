@@ -1,4 +1,9 @@
+/**
+ * TODO: 背景类
+ * date: 2017-6-6
+ */
 var Background = (function(_super){
+    'use strict';
     function Background(){
         Background.super(this);
         this.bg1 = new Laya.Sprite();
